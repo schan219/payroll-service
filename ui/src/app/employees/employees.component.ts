@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { PayrollService } from '../payroll.service';
 import { Employee } from '../employee';
+import { Employer } from '../employer';
 
 @Component({
   selector: 'app-employees',
@@ -8,19 +10,18 @@ import { Employee } from '../employee';
 })
 export class EmployeesComponent implements OnInit {
 
-  employee: Employee = {
-    address: 11111,
-    lastPayDay: new Date(1301090400 * 1000),
-    salary: 1,
-    employeePoolIndex: 1,
-    employerAddress: 22222
-  };
-
-  isEmployee = true
-
-  constructor() { }
+  constructor(private payrollService: PayrollService) { }
 
   ngOnInit() {
+      this.employee = this.payrollService.getEmployee()
+      this.isEmployee = true
+  }
+
+  employee: Employee
+  isEmployee: boolean
+
+  getEmployee(): void {
+      this.employee = this.payrollService.getEmployee()
   }
 
 }

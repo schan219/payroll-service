@@ -3,7 +3,7 @@ const ganache = require('ganache-cli');
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
 
-const compiledPayroll = require('../ethereum/build/Payroll.json');
+const compiledPayroll = require('../ethereum/build/contracts/Payroll.json');
 
 var accounts;
 var payroll;

@@ -2,7 +2,7 @@
     <form>
         <div class="form-group">
             <label for="contractAddress">Set Contract address</label>
-            <input [(ngModel)]="employeeAddress" class="form-control" placeholder="Enter contract address">
+            <input [(ngModel)]="employeeAddress" class="form-control" [ngModelOptions]="{standalone: true}" placeholder="Enter contract address">
         </div>
     </form>
     <div class="row">
