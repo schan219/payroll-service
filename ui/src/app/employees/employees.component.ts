@@ -13,7 +13,7 @@ export class EmployeesComponent implements OnInit {
   constructor(private payrollService: PayrollService) { }
 
   ngOnInit() {
-      this.employee = this.payrollService.getEmployee()
+      this.getEmployee()
       this.isEmployee = true
   }
 
@@ -21,7 +21,7 @@ export class EmployeesComponent implements OnInit {
   isEmployee: boolean
 
   getEmployee(): void {
-      this.employee = this.payrollService.getEmployee()
+    this.payrollService.getEmployee().subscribe(employee => this.employee = employee)
   }
 
 }

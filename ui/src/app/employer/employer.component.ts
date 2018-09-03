@@ -29,11 +29,11 @@ export class EmployerComponent implements OnInit {
   funds: number
 
   getEmployees(): void {
-    this.employees = this.payrollService.getEmployees()
+    this.payrollService.getEmployees().subscribe(employees => this.employees = employees)
   }
 
   getEmployer(): void {
-    this.employer = this.payrollService.getEmployer()
+    this.payrollService.getEmployer().subscribe(employer => this.employer = employer)
   }
 
 }
