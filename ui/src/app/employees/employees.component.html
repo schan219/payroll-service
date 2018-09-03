@@ -1,0 +1,19 @@
+<div *ngIf="isEmployee; else isNotEmployee">
+    <div class="container">
+        <div class="row">
+            <p><b>Employer Address:</b> {{ employee.employerAddress }}</p>
+        </div>
+        <div class="row">
+            <p><b>Your Address:</b> {{ employee.address }}</p>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary">Get Paid</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #isNotEmployee>
+    <div class="container">
+        <p>You are not an employee.</p>
+    </div>
+</ng-template>

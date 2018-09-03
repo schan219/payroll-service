@@ -1,0 +1,15 @@
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="contractAddress">Set Contract address</label>
+            <input [(ngModel)]="employeeAddress" class="form-control" placeholder="Enter contract address">
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <p>Runway: {{ runway }}</p>
+            <p>Has Enough Funds: {{ enoughFunds }}</p>
+            <p>Is Employee: {{ isEmployee }}</p>
+        </div>
+    </div>
+</div>

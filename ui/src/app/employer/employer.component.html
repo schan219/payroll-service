@@ -1,0 +1,73 @@
+<div *ngIf="payrollInitialized; else payrollNotInitialized">
+    <div class="container">
+        <div class="row">
+            <p><b>Contract Address:</b> {{ contractAddress }}</p>
+        </div>
+        <div class="row">
+            <p><b>Funds:</b> {{ funds }} eth</p>
+        </div>
+        <div class="row">
+            <h5>Add Funds</h5>
+        </div>
+        <div class="row">
+            <form>
+                <div class="form-group">
+                <input [(ngModel)]="addFund" class="form-control" [ngModelOptions]="{standalone: true}">
+                </div>
+                <button class="btn btn-primary">Add Funds</button>
+            </form>
+        </div>
+        <br/>
+        <div class="row">
+            <h5>List of Employees</h5>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Address</th>
+                        <th scope="col">Salary</th>
+                        <th scope="col">Last Pay Day</th>
+                        <th scope="col">Remove Employee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let employee of employees">
+                        <th scope="row">{{ employee.address }}</th>
+                        <td>{{ employee.salary }} eth</td>
+                        <td>{{ employee.lastPayDay }}</td>
+                        <td><button type="button" class="btn btn-danger">X</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <h5>Add New Employee</h5>
+        </div>
+        <div class="row">
+            <form>
+                <div class="form-group">
+                    <label>Employee Address</label>
+                    <input [(ngModel)]="newEmployeeAddress" class="form-control" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group">
+                    <label>Salary</label>
+                    <input [(ngModel)]="newEmployeeSalary" class="form-control" [ngModelOptions]="{standalone: true}">
+                </div>
+                <button class="btn btn-primary">Add Employee</button>
+            </form>
+        </div>
+        <br/>
+    </div>
+</div>
+
+<ng-template #payrollNotInitialized>
+    <div class="container">
+        <div class="row">
+            You don't have the payroll service initialized yet. Click the button below to create the service.
+        </div>
+        <div class="row">
+            <button class="btn btn-primary">Create Payroll Service</button>
+        </div>
+    </div>
+</ng-template>
