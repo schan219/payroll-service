@@ -28,11 +28,11 @@ export class PublicComponent implements OnInit {
   isEmployee: boolean
 
   getEmployee(): void {
-    this.payrollService.getEmployee().subscribe(employee => this.employee = employee)
+    this.payrollService.getMockEmployee().subscribe(employee => this.employee = employee)
   }
 
   getEmployer(): void {
-    this.payrollService.getEmployer().subscribe(employer => this.employer = employer)
+    this.payrollService.getMockEmployer().subscribe(employer => this.employer = employer)
   }
 
 }

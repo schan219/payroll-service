@@ -14,6 +14,7 @@ export class EmployeesComponent implements OnInit {
 
   ngOnInit() {
       this.getEmployee()
+      // TODO: check this
       this.isEmployee = true
   }
 
@@ -21,7 +22,7 @@ export class EmployeesComponent implements OnInit {
   isEmployee: boolean
 
   getEmployee(): void {
-    this.payrollService.getEmployee().subscribe(employee => this.employee = employee)
+    this.payrollService.getMockEmployee().subscribe(employee => this.employee = employee)
   }
 
 }

@@ -1,18 +1,20 @@
 pragma solidity ^0.4.18;
 
 contract Payroll {
+    
     struct EmployeeInfo {
         uint salary;
         uint lastPayday;
         uint employeePoolIndex;
     }
+    
     uint constant payDuration = 10 seconds;
     uint totalSalary;
     address private owner;
     address[] private employeePool;
     mapping (address => EmployeeInfo) private employee;
 
-    function Payroll() {
+    constructor() public {
         owner = msg.sender;
     }
 
@@ -20,18 +22,20 @@ contract Payroll {
         return e.salary * (now - e.lastPayday) / payDuration;
     }
 
-    function addFund() payable returns (uint) {
-        return this.balance;
+    function addFund() public payable {}
+    
+    function getBalance() public view returns(uint) {
+        return address(this).balance;
     }
 
-    function calculateRunway() view returns (uint) {
+    function calculateRunway() public view returns (uint) {
         uint employeePoolLength = employeePool.length;
         require (employeePoolLength > 0);
 
-        return this.balance / totalSalary;
+        return address(this).balance / totalSalary;
     }
 
-    function hasEnoughFund() view returns (bool) {
+    function hasEnoughFund() public view returns (bool) {
         return calculateRunway() >= 1;
     }
 
@@ -39,18 +43,20 @@ contract Payroll {
         return employeePool.length == 0 ? false : employeePool[employee[e].employeePoolIndex] == e;
     }
 
-    function createEmployee(address e, uint s) returns (uint count) {
+    function createEmployee(address e, uint s) public {
         require(msg.sender == owner && !isEmployee(e) && e != 0x0);
 
         employee[e].salary = s * 1 ether;
         employee[e].lastPayday = now;
         employee[e].employeePoolIndex = employeePool.push(e) - 1;
         totalSalary += s * 1 ether;
-
+    }
+    
+    function employeePoolCount() public view returns (uint count) {
         return employeePool.length - 1;
     }
 
-    function getEmployee(address e) view returns (uint salary, uint payDay, uint index) {
+    function getEmployee(address e) public view returns (uint salary, uint payDay, uint index) {
         require(msg.sender == owner && isEmployee(e));
 
         return (
@@ -60,7 +66,7 @@ contract Payroll {
         );
     }
 
-    function updateEmployeeSalary(address e, uint s) returns (bool success) {
+    function updateEmployeeSalary(address e, uint s) public {
         require(msg.sender == owner && isEmployee(e));
 
         uint payment = _calculatePayment(employee[e]);
@@ -70,11 +76,9 @@ contract Payroll {
         employee[e].salary = s * 1 ether;
 
         e.transfer(payment);
-
-        return true;
     }
 
-    function updateEmployeeAddress(address oldAddress, address newAddress) returns (bool success) {
+    function updateEmployeeAddress(address oldAddress, address newAddress) public {
         require(msg.sender == owner && isEmployee(oldAddress));
 
         uint positionToReplace = employee[oldAddress].employeePoolIndex;
@@ -87,11 +91,9 @@ contract Payroll {
         delete employee[oldAddress];
 
         newAddress.transfer(payment);
-
-        return true;
     }
 
-    function deleteEmployee(address e) returns (bool success) {
+    function deleteEmployee(address e) public {
         require(msg.sender == owner && isEmployee(e));
 
         uint positoinToDelete = employee[e].employeePoolIndex;
@@ -105,11 +107,9 @@ contract Payroll {
         employeePool[positoinToDelete] = addressToMove;
         employee[addressToMove].employeePoolIndex = positoinToDelete;
         employeePool.length --;
-
-        return true;
     }
 
-    function getPaid() public returns (bool success) {
+    function getPaid() public {
         address sender = msg.sender;
         require(isEmployee(sender));
 
@@ -118,7 +118,7 @@ contract Payroll {
 
         employee[sender].lastPayday = nextPayday;
         sender.transfer(employee[sender].salary);
-
-        return true;
     }
+    
+    function () public payable {}
 }
