@@ -1,19 +1,5 @@
 pragma solidity ^0.4.18;
 
-contract PayrollHub {
-    address public deployedPayrollService;
-
-    constructor() public {}
-    
-    function createPayrollService() public {
-        deployedPayrollService = new Payroll(msg.sender);
-    }
-    
-    function getDeployedPayrollService() public view returns (address) {
-        return deployedPayrollService;
-    }
-}
-
 contract Payroll {
 
     struct EmployeeInfo {
@@ -34,8 +20,8 @@ contract Payroll {
         _;
     }
 
-    constructor(address _owner) public {
-        owner = _owner;
+    constructor() public {
+        owner = msg.sender;
     }
 
     function getEmployeeAddress(uint index) public view restricted returns (address) {
@@ -100,13 +86,12 @@ contract Payroll {
         );
     }
 
-    function getEmploymentInfo() public view returns (uint salary, uint payDay, uint index) {
+    function getEmploymentInfo() public view returns (uint salary, uint payDay) {
         require(isEmployee(msg.sender));
 
         return (
             employee[msg.sender].salary,
-            employee[msg.sender].lastPayday,
-            employee[msg.sender].employeePoolIndex
+            employee[msg.sender].lastPayday
         );
     }
 

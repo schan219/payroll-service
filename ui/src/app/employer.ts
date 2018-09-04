@@ -1,5 +1,5 @@
 export class Employer {
-    address: number;
+    address: string;
     runway: number;
     funds: number;
 }

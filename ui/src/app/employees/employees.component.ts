@@ -10,19 +10,32 @@ import { Employer } from '../employer';
 })
 export class EmployeesComponent implements OnInit {
 
+  employee: Employee
+  isEmployee: boolean = false
+
   constructor(private payrollService: PayrollService) { }
 
   ngOnInit() {
-      this.getEmployee()
-      // TODO: check this
-      this.isEmployee = true
+    this.initializeWeb3().then((results) => {
+      this.getEmploymentInfo()
+      if (this.employee) {
+        this.isEmployee = true
+      }
+    }).catch((e) => {
+      console.log(e)
+    })
   }
 
-  employee: Employee
-  isEmployee: boolean
+  initializeWeb3() {
+    return new Promise(async (resolve) => {
+      var results = await this.payrollService.initializeWeb3()
+      resolve(results)
+    })
+  }
 
-  getEmployee(): void {
-    this.payrollService.getMockEmployee().subscribe(employee => this.employee = employee)
+  async getEmploymentInfo() {
+    //this.payrollService.getMockEmployee().subscribe(employee => this.employee = employee)
+    this.employee = await this.payrollService.getEmploymentInfo() as Employee
   }
 
 }

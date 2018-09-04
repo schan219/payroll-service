@@ -12,9 +12,9 @@
         <div class="row">
             <form>
                 <div class="form-group">
-                <input [(ngModel)]="addFund" class="form-control" [ngModelOptions]="{standalone: true}">
+                <input [(ngModel)]="fundField" class="form-control" [ngModelOptions]="{standalone: true}">
                 </div>
-                <button class="btn btn-primary">Add Funds</button>
+                <button class="btn btn-primary" (click)="addFunds()">Add Funds</button>
             </form>
         </div>
         <br/>
@@ -29,6 +29,7 @@
                         <th scope="col">Salary</th>
                         <th scope="col">Last Pay Day</th>
                         <th scope="col">Remove Employee</th>
+                        <th scope="col">Fire Employee</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +37,8 @@
                         <th scope="row">{{ employee.address }}</th>
                         <td>{{ employee.salary }} eth</td>
                         <td>{{ employee.lastPayDay }}</td>
-                        <td><button type="button" class="btn btn-danger">X</button></td>
+                        <td><button type="button" class="btn btn-dark" (click)="deleteEmployee()">X</button></td>
+                        <td><button type="button" class="btn btn-danger" (click)="deleteEmployeeAndBurnPayment()">X</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -54,7 +56,7 @@
                     <label>Salary</label>
                     <input [(ngModel)]="newEmployeeSalary" class="form-control" [ngModelOptions]="{standalone: true}">
                 </div>
-                <button class="btn btn-primary">Add Employee</button>
+                <button class="btn btn-primary" (click)="createEmployee()">Add Employee</button>
             </form>
         </div>
         <br/>

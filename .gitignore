@@ -2,3 +2,4 @@ node_modules/*
 
 ui/node_modules/*
 ethereum/build
+ethereum/compile.js

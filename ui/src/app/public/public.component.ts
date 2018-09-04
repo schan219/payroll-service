@@ -10,29 +10,35 @@ import { Employer } from '../employer';
 })
 export class PublicComponent implements OnInit {
 
+  employerAddress: string
+  runway: any
+  enoughFunds: boolean
+
   constructor(private payrollService: PayrollService) { }
 
   ngOnInit() {
-    this.getEmployee()
-    this.getEmployer()
-
-    this.runway = this.employer.runway
-    this.enoughFunds = this.runway >= 1 ? true : false
-    this.isEmployee = this.employee.employerAddress === this.employer.address ? true : false
+    this.initializeWeb3().then((results) => {
+      this.getContractAddress()
+      this.calculateRunway()
+      this.enoughFunds = this.runway >= 1 ? true : false
+    }).catch((e) => {
+      console.log(e)
+    })
   }
 
-  employee: Employee
-  employer: Employer
-  runway: number
-  enoughFunds: boolean
-  isEmployee: boolean
-
-  getEmployee(): void {
-    this.payrollService.getMockEmployee().subscribe(employee => this.employee = employee)
+  initializeWeb3() {
+    return new Promise(async (resolve) => {
+      var results = await this.payrollService.initializeWeb3()
+      resolve(results)
+    })
   }
 
-  getEmployer(): void {
-    this.payrollService.getMockEmployer().subscribe(employer => this.employer = employer)
+  getContractAddress(): void {
+    this.employerAddress = this.payrollService.getContractAddress()
+  }
+
+  async calculateRunway() {
+    this.runway = await this.payrollService.calculateRunway()
   }
 
 }

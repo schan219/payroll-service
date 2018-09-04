@@ -6,6 +6,9 @@ import { EMPLOYER } from './mock-employer';
 import { Observable, of } from 'rxjs';
 import Web3 from 'web3';
 
+declare let require: any;
+let Payroll = require('./../../../ethereum/build-frontend/Payroll.json');
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +16,24 @@ import Web3 from 'web3';
 export class PayrollService {
 
   private _web3: any
+  private _payroll: any
+  private _contractAddress = '0x42f4eded60e9eff5537dc31ebdf3f04906ab8f78'
 
-  constructor() { 
-    this.getWeb3().then((results) => {
+  constructor() {
+    this.initializeWeb3().then((results) => {
       this._web3 = results['web3']
-    }).catch((e) => {
-      console.log(e)
+      this._payroll = new this._web3.eth.Contract(
+        JSON.parse(Payroll.interface),
+        this._contractAddress
+        )
     })
   }
 
-  getWeb3(): Promise<Object> { 
+  getContractAddress(): string {
+    return this._contractAddress;
+  }
+
+  initializeWeb3(): Promise<Object> { 
     return new Promise(function(resolve, reject) {
       // Wait for loading completion to avoid race conditions with web3 injection timing.
       window.addEventListener('load', function() {
@@ -71,16 +82,17 @@ export class PayrollService {
       return of(EMPLOYER)
   }
 
-  addFund(): Promise<boolean> {
+  addFund(fundField: number) {
     return new Promise(async (resolve, reject) => {
       try {
         var accounts = await this._web3.eth.getAccounts()
 
-        var success = await this._web3.methods.addFund().send({
-          from: accounts[0]
+        await this._web3.methods.addFund().send({
+          from: accounts[0],
+          value: fundField
         })
 
-        resolve(success)
+        resolve()
       } catch (e) {
 
         console.log('Cannot add funds.');
@@ -106,10 +118,10 @@ export class PayrollService {
     })
   }
 
-  getEmployee(address: number) {
+  getEmploymentInfo(): Promise<Object> {
     return new Promise(async (resolve, reject) => {
-      try {
-        var employee = await this._web3.methods.getEmployee(address).call()
+      try {    
+        let employee = await this._payroll.methods.getEmployee().call()
 
         resolve(employee)
       } catch (e) {
@@ -126,11 +138,11 @@ export class PayrollService {
       try {
         var accounts = await this._web3.eth.getAccounts()
 
-        var success = await this._web3.methods.createEmployee(address, salary).send({
+        await this._payroll.methods.createEmployee(address, salary).send({
           from: accounts[0]
         })
 
-        resolve(success)
+        resolve()
       } catch (e) {
 
         console.log('Cannot create employee.');
@@ -145,11 +157,11 @@ export class PayrollService {
       try {
         var accounts = await this._web3.eth.getAccounts()
 
-        var success = await this._web3.methods.deleteEmployee(address).send({
+        await this._payroll.methods.deleteEmployee(address).send({
           from: accounts[0]
         })
 
-        resolve(success)
+        resolve()
       } catch (e) {
 
         console.log('Cannot delete employee.');
@@ -164,11 +176,11 @@ export class PayrollService {
       try {
         var accounts = await this._web3.eth.getAccounts()
 
-        var success = await this._web3.methods.updateEmployeeAddress(oldAddress, newAddress).send({
+        await this._payroll.methods.updateEmployeeAddress(oldAddress, newAddress).send({
           from: accounts[0]
         })
 
-        resolve(success)
+        resolve()
       } catch (e) {
 
         console.log('Cannot update employee address.');
@@ -183,11 +195,11 @@ export class PayrollService {
       try {
         var accounts = await this._web3.eth.getAccounts()
 
-        var success = await this._web3.methods.updateEmployeeSalary(address, salary).send({
+        await this._web3.methods.updateEmployeeSalary(address, salary).send({
           from: accounts[0]
         })
 
-        resolve(success)
+        resolve()
       } catch (e) {
 
         console.log('Cannot update employee salary.');
@@ -202,11 +214,11 @@ export class PayrollService {
       try {
         var accounts = await this._web3.eth.getAccounts();
 
-        var paid = await this._web3.methods.getPaid().send({
+        await this._payroll.methods.getPaid().send({
           from: accounts[0]
         })
 
-        resolve(paid)
+        resolve()
       } catch (e) {
 
         console.log('Cannot get paid.');
@@ -216,10 +228,11 @@ export class PayrollService {
     })
   }
 
-  calculateRunway() {
+  calculateRunway(): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try {
-        var runway = await this._web3.methods.calculateRunway().call()
+        console.log(this._payroll)
+        var runway = await this._payroll.methods.calculateRunway().call()
 
         resolve(runway)
       } catch (e) {
@@ -231,10 +244,10 @@ export class PayrollService {
     })
   }
 
-  hasEnoughFund() {
+  hasEnoughFund(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        var enoughFund = await this._web3.methods.hasEnoughFund().call()
+        var enoughFund = await this._payroll.methods.hasEnoughFund().call()
 
         resolve(enoughFund)
       } catch (e) {
@@ -246,10 +259,10 @@ export class PayrollService {
     })
   }
 
-  isEmployee() {
+  isEmployee(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        var isEmployee = await this._web3.methods.isEmployee().call()
+        var isEmployee = await this._payroll.methods.isEmployee().call()
 
         resolve(isEmployee)
       } catch (e) {
