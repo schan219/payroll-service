@@ -59,10 +59,6 @@ contract Payroll {
         return employeePool.length == 0 ? false : employeePool[employee[e].employeePoolIndex] == e;
     }
 
-    function isEmployee() public view returns (bool success) {
-        return employeePool.length == 0 ? false : employeePool[employee[msg.sender].employeePoolIndex] == msg.sender;
-    }
-
     function createEmployee(address e, uint s) public restricted {
         require(!isEmployee(e) && e != 0x0);
 
@@ -73,7 +69,7 @@ contract Payroll {
     }
     
     function employeePoolCount() public view returns (uint count) {
-        return employeePool.length - 1;
+        return employeePool.length;
     }
 
     function getEmployee(address e) public view restricted returns (uint salary, uint payDay, uint index) {
@@ -131,12 +127,11 @@ contract Payroll {
         uint payment = _calculatePayment(employee[e]);
         employee[e].lastPayday = now;
         totalSalary -= employee[e].salary;
+        e.transfer(payment);
 
         employeePool[positoinToDelete] = addressToMove;
         employee[addressToMove].employeePoolIndex = positoinToDelete;
         employeePool.length --;
-
-        e.transfer(payment);
     }
 
     function deleteEmployeeAndBurnPayment(address e) public restricted {
@@ -148,12 +143,11 @@ contract Payroll {
         uint payment = _calculatePayment(employee[e]);
         employee[e].lastPayday = now;
         totalSalary -= employee[e].salary;
+        burnAddress.transfer(payment);
 
         employeePool[positoinToDelete] = addressToMove;
         employee[addressToMove].employeePoolIndex = positoinToDelete;
         employeePool.length --;
-
-        burnAddress.transfer(payment);
     }
 
     function getPaid() public {
